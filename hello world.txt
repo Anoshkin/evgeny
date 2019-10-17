@@ -1,3 +1,5 @@
 print("hello world!;");
 print("hello;")
 print('good morning;')
+print('hello my dear frienf!;')
+print('Очередной комит;')
