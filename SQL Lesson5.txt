@@ -1,0 +1,9 @@
+1. update products set created_at = now();
+2. Не понял как делать
+3. select * from storehouses_products order by case when value = 0 then 1 else 0 end, value;
+4. select * from users where birthday_at IN ('may', 'august');
+5. SELECT * FROM catalogs WHERE id IN (3, 1, 2) order by case when id = 3 then 0 when id = 1 then 1 when id = 2 then 2 end;
+
+По агрегации:
+1. select AVG(YEAR(NOW()) - YEAR(birthday_at)) from users;
+2. select DAYNAME(birthday_at) as DayOfWeek, COUNT(DAYNAME(birthday_at)) as to_count from users group by DAYNAME(birthday_at) order by to_count;
