@@ -1,0 +1,68 @@
+NUMPY
+1.
+Import numpy as np
+a = np.array([[1, 6],
+            [2, 8],
+            [3, 11],
+            [3, 10], 
+            [1, 7]])
+
+mean_a = a.mean(axis = 0)
+a.shape
+mean_a
+
+2.
+a_centered = a - mean_a
+a_centered
+
+3.
+N = len(a)
+a_centered_sp = (a_centered * a_centered).sum(axis = 0) / (N - 1)
+a_centered_sp
+
+4.
+np.cov(a.T)
+
+
+PANDAS
+1.
+import pandas as pd
+
+authors = pd.DataFrame({'author_id': [1, 2, 3], 'author_name': ['Чехов', 'Тургенев', 'Островский']},
+                       columns=['author_id', 'author_name'])
+authors
+
+book = pd.DataFrame({'author_id': [1, 1, 1, 2, 2, 3, 3], 'book_title': ['Отцы и Дети', 'Рудин', 'Дворянское гнездо', 'Толстый и Тонкий', 'Дама с собачкой', 'Гроза', 'Таланты и поклонники'], 'price': [450, 300, 350, 500, 450, 370, 290]},
+                       columns=['author_id', 'book_title', 'price'])
+book
+
+2.
+authors_price = pd.merge(authors, book, on = 'author_id', how = 'inner')
+authors_price
+
+3.
+top5 = authors_price.nlargest(5, 'price')
+top5
+
+4.
+df1 = authors_price.groupby('author_name').agg({'price': 'min'}).rename(columns={'price':'min_price'})
+
+df2 = authors_price.groupby('author_name').agg({'price': 'max'}).rename(columns={'price':'max_price'})
+
+df3 = authors_price.groupby('author_name').agg({'price': 'mean'}).rename(columns={'price':'mean_price'}).astype(int)
+
+authors_stat = pd.concat([df1, df2, df3], axis=1)
+authors_stat
+
+5.
+authors_price.insert(3, 'Cover', ['твердая', 'мягкая', 'мягкая', 'твердая', 'твердая', 'мягкая', 'мягкая'], True)
+authors_price
+
+book_info = authors_price.pivot_table(index='author_name', columns='Cover', aggfunc={'price': sum}).fillna(0).astype(int)
+book_info
+
+book_info.to_pickle('book_info.pkl')
+book_info2 = pd.read_pickle('book_info.pkl')
+book_info2
+
+book_info2==book_info
