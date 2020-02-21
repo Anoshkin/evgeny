@@ -28,11 +28,11 @@ PANDAS
 1.
 import pandas as pd
 
-authors = pd.DataFrame({'author_id': [1, 2, 3], 'author_name': ['—ехов', '’ургенев', 'Ћстровский']},
+authors = pd.DataFrame({'author_id': [1, 2, 3], 'author_name': ['Р§РµС…РѕРІ', 'РўСѓСЂРіРµРЅРµРІ', 'РћСЃС‚СЂРѕРІСЃРєРёР№']},
                        columns=['author_id', 'author_name'])
 authors
 
-book = pd.DataFrame({'author_id': [1, 1, 1, 2, 2, 3, 3], 'book_title': ['Ћтцы и „ети', 'ђудин', '„ворЯнское гнездо', '’олстый и ’онкий', '„ама с собачкой', 'ѓроза', '’аланты и поклонники'], 'price': [450, 300, 350, 500, 450, 370, 290]},
+book = pd.DataFrame({'author_id': [1, 1, 1, 2, 2, 3, 3], 'book_title': ['РћС‚С†С‹ Рё Р”РµС‚Рё', 'Р СѓРґРёРЅ', 'Р”РІРѕСЂСЏРЅСЃРєРѕРµ РіРЅРµР·РґРѕ', 'РўРѕР»СЃС‚С‹Р№ Рё РўРѕРЅРєРёР№', 'Р”Р°РјР° СЃ СЃРѕР±Р°С‡РєРѕР№', 'Р“СЂРѕР·Р°', 'РўР°Р»Р°РЅС‚С‹ Рё РїРѕРєР»РѕРЅРЅРёРєРё'], 'price': [450, 300, 350, 500, 450, 370, 290]},
                        columns=['author_id', 'book_title', 'price'])
 book
 
@@ -55,7 +55,7 @@ authors_stat = pd.concat([df1, df2, df3], axis=1)
 authors_stat
 
 5.
-authors_price.insert(3, 'Cover', ['твердаЯ', 'мЯгкаЯ', 'мЯгкаЯ', 'твердаЯ', 'твердаЯ', 'мЯгкаЯ', 'мЯгкаЯ'], True)
+authors_price.insert(3, 'Cover', ['С‚РІРµСЂРґР°СЏ', 'РјСЏРіРєР°СЏ', 'РјСЏРіРєР°СЏ', 'С‚РІРµСЂРґР°СЏ', 'С‚РІРµСЂРґР°СЏ', 'РјСЏРіРєР°СЏ', 'РјСЏРіРєР°СЏ'], True)authors_price
 authors_price
 
 book_info = authors_price.pivot_table(index='author_name', columns='Cover', aggfunc={'price': sum}).fillna(0).astype(int)
