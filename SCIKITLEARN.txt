@@ -1,0 +1,110 @@
+1.
+import pandas as pd
+import numpy as np
+from sklearn.datasets import load_boston
+import matplotlib.pyplot as plt
+
+boston = load_boston()
+
+feature_names = boston['feature_names']
+data = boston.data
+target = boston.target
+
+x = pd.DataFrame(data, columns=feature_names)
+y = pd.DataFrame(target, columns=['Price'])
+
+from sklearn.model_selection import train_test_split
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
+
+from sklearn.linear_model import LinearRegression
+
+lr = LinearRegression()
+lr.fit(x_train, y_train)
+y_pred = lr.predict(x_test)
+
+check_test = pd.DataFrame({
+    "y_test": y_test['Price'],
+    "y_pred": y_pred.flatten(),
+})
+
+check_test.head(10)
+
+from sklearn.metrics import r2_score
+
+r2_score(y_test, y_pred)
+
+
+2.
+from sklearn.ensemble import RandomForestRegressor
+
+rfr = RandomForestRegressor(n_estimators=1000, max_depth=12, random_state=42)
+rfr.fit(x_train, y_train.values[:, 0])
+
+y_rfr_pred = rfr.predict(x_test)
+
+y_rfr_pred2 = pd.DataFrame(y_rfr_pred, columns=['Price'])
+y_rfr_pred2
+
+r2_score(y_test, y_rfr_pred) # работает лучше случайный лес
+
+3.
+?RandomForestRegressor
+Не знаю что дальше делать и за чем
+
+4.
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import train_test_split
+
+DATASET_PATH = '/Users/evgeny/Downloads/creditcard.csv'
+df = pd.read_csv(DATASET_PATH)
+
+df.info()
+df.isnull().astype(np.int).sum().astype(np.int)
+
+df['Class'].value_counts(normalize=True)
+
+pd.options.display.max_columns = 100
+df.head(10)
+
+X = df.drop('Class', axis=1)
+y = df['Class']
+y
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=100, stratify=y)
+
+X_train.shape, X_test.shape, y_train.shape, y_test.shape
+
+parameters = [{
+    'n_estimators': [10, 15],
+    'max_features': np.arange(3, 5),
+    'max_depth': np.arange(4, 7)
+}]
+
+clf = GridSearchCV(
+    estimator=RandomForestClassifier(),
+    param_grid=parameters,
+    scoring='roc_auc',
+    cv=3,
+)
+
+clf.fit(X_train, y_train)
+
+clf.best_params_
+
+y_predict_proba = clf.predict_proba(X_train)
+y_predict_proba = y_predict_proba[:, 1]
+y_predict_proba
+
+plt.hist(y_predict_proba[y_train == 1], bins=7, density=True, label='class 1', alpha=0.5)
+plt.hist(y_predict_proba[y_train == 0], bins=7, density=True, label='class 0', alpha=0.5)
+
+plt.xlabel("Probability")
+plt.ylabel("Density")
+
+plt.legend()
+
+from sklearn.metrics import roc_auc_score
+
+roc_auc_score(y_train, y_predict_proba) # 0,959
