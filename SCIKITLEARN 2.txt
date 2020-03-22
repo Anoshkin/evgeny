@@ -1,0 +1,66 @@
+1.
+import numpy as np
+import pandas as pd
+import matplotlib
+import matplotlib.pyplot as plt
+%matplotlib inline
+%config InlineBackend.figure_format = 'svg'
+
+from sklearn.datasets import load_boston
+boston = load_boston()
+x = pd.DataFrame(boston.data, columns=boston.feature_names)
+y = pd.DataFrame(boston.target)
+
+# Разбейте эти датафреймы на тренировочные (X_train, y_train) и тестовые (X_test, y_test)
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2, random_state = 42)
+# Масштабируйте данные с помощью StandardScaler.
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+x_train_scaled = scaler.fit_transform(x_train)
+x_train_scaled = pd.DataFrame(x_train_scaled, columns=x_train.columns)
+x_test_scaled = scaler.fit_transform(x_test)
+x_test_scaled = pd.DataFrame(x_test_scaled, columns=x_test.columns)
+
+# Постройте модель TSNE на тренировочный данных с параметрами:
+# n_components=2, learning_rate=250, random_state=42.
+# Постройте диаграмму рассеяния на этих данных.
+
+from sklearn.manifold import TSNE
+tsne = TSNE(n_components=2, learning_rate=250, random_state=42)
+x_train_tsne = tsne.fit_transform(x_train_scaled)
+
+plt.scatter(x_train_tsne[:, 0], x_train_tsne[:, 1])
+plt.show()
+
+2.
+# С помощью KMeans разбейте данные из тренировочного набора на 3 кластера,
+# используйте все признаки из датафрейма X_train.
+
+from sklearn.cluster import KMeans
+kmeans = KMeans(n_clusters=3, max_iter=100 ,random_state=42)
+labels_train = kmeans.fit_predict(x_train_scaled)
+plt.scatter(x_train_tsne[:, 0], x_train_tsne[:, 1], c=labels_train)
+plt.show()
+
+y_train.mean()
+y_train[labels_train == 0].mean()
+y_train[labels_train == 1].mean()
+y_train[labels_train == 2].mean()
+
+x_train['CRIM'].mean()
+x_train.CRIM[labels_train ==0].mean()
+x_train.CRIM[labels_train ==1].mean()
+x_train.CRIM[labels_train ==2].mean()
+
+3.
+labels_test = kmeans.predict(x_test_scaled)
+y_test.mean()
+y_test[labels_test ==0].mean()
+y_test[labels_test ==1].mean()
+y_test[labels_test ==2].mean()
+
+x_test.CRIM.mean()
+x_test.CRIM[labels_test ==0].mean()
+x_test.CRIM[labels_test ==1].mean()
+x_test.CRIM[labels_test ==2].mean()
